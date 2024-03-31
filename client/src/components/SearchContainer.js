@@ -16,6 +16,9 @@ const SearchContainer = () => {
   } = useAppContext()
   const [search, setSearch] = useState('')
   const [contact, setContact] = useState('')
+  const [prompt, setPrompt] = useState('')
+  const [promptVersion, setPromptVersion] = useState('')
+  const [documentDatabase, setDocumentDatabase] = useState('')
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -28,33 +31,59 @@ const SearchContainer = () => {
     handleChange({ name: e.target.name, value: e.target.value })
   }
 
+  const handleSelectListing = (e) => {
+    e.preventDefault()
+    setPrompt(e.target.value)
+  }
+
+  const handleSelectVersion = (e) => {
+    e.preventDefault()
+    setPromptVersion(e.target.value)
+  }
+
+  const handleSelectDocumentDatabase = (e) => {
+    e.preventDefault()
+    setDocumentDatabase(e.target.value)
+  }
   return (
     <Wrapper>
       <form className='form' onSubmit={handleSubmit}>
-        <h4>search listings</h4>
+        <h4>Prompt Context</h4>
         <div className='form-center'>
           {/* search position */}
 
-          <FormRow
-            type='text'
-            name='keyword'
-            value={search}
-            handleChange={(e) => {
-              setSearch(e.target.value)
-            }}
+          <FormRowSelect
+            name='Document Database'
+            list={[
+              'Retirement',
+              'Young Adults',
+              'Kids',
+              'Investments',
+              'Business',
+              'capitalone',
+            ]}
+            value={documentDatabase}
+            handleChange={handleSelectDocumentDatabase}
           />
           <FormRowSelect
-            name='sort'
-            value={sort}
-            list={sortOptions}
-            handleChange={handleSearch}
+            name='Prompt'
+            value={prompt}
+            list={[
+              'Retirement',
+              'Young Adults',
+              'Kids',
+              'Investments',
+              'Business',
+              'capitalone',
+            ]}
+            handleChange={handleSelectListing}
           />
 
           <FormRowSelect
-            name='filter'
-            value={filter}
-            list={contactOptions}
-            handleChange={handleSearch}
+            name='Prompt Version'
+            value={promptVersion}
+            list={['1.0', '1.1', '2.0', '2.1']}
+            handleChange={handleSelectVersion}
           />
         </div>
       </form>

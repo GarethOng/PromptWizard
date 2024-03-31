@@ -5,6 +5,7 @@ import {
   SharedLayout,
   AddNewListing,
   ListingInfo,
+  AddData,
 } from './pages/dashboard'
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path='AddNewListing' element={<AddNewListing />}></Route>
           <Route path='ListingInfo' element={<ListingInfo />}></Route>
+          <Route path='/addData' element={<AddData />}></Route>
         </Route>
         <Route path='/register' element={<Register />}></Route>
         <Route path='/landing' element={<Landing />}></Route>

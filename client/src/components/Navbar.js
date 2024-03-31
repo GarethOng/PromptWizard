@@ -16,7 +16,7 @@ const Navbar = () => {
 
         <div>
           <Logo />
-          <h3 className='logo-text'>dashboard</h3>
+          <h3 className='logo-text'>PromptWizard</h3>
         </div>
 
         <div className='btn-container'>

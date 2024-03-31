@@ -13,28 +13,42 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Slide from '@mui/material/Slide'
 import Stack from '@mui/material/Stack'
-
-const ResponseCard = (props) => {
+import { FormRow } from '../../components'
+const ContextCard = (props) => {
   return (
     <Card sx={{ width: '250px', height: '335px' }}>
       <CardContent>
         <Typography gutterBottom variant='p' component='div'>
-          Question: {props.question}
-        </Typography>
-        <Typography gutterBottom variant='p' component='div'>
-          Response: {props.response}
+          {props.information}
         </Typography>
       </CardContent>
     </Card>
   )
 }
-const AddNewListing = () => {
+const AddData = () => {
   const [responses, setResponses] = useState([])
+  const [contexts, setContexts] = useState([])
+  const addContext = async (name, information) => {
+    // send to backend at /api/v1/context/add
+    const response = await fetch('http://localhost:5001/api/v1/context/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name,
+        information: information,
+      }),
+    })
+    const processed = await response.json()
+    console.log(processed.contexts)
+    setContexts(processed.contexts)
+  }
   const getResponses = async (prompt_name, prompt_version) => {
     console.log(prompt_name)
     console.log(prompt_version)
     // send to backend at /api/v1/responses
-    const response = await fetch('http://localhost:5001/api/v1/response/find', {
+    const response = await fetch('http://localhost:5001/api/v1/context/add', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -49,25 +63,24 @@ const AddNewListing = () => {
     setResponses(processed.responses)
   }
   const [selectedListing, setSelectedListing] = useState('')
-  const [selectedVersion, setSelectedVersion] = useState('')
+  const [text, setText] = useState('')
 
+  const handleTextChange = (e) => {
+    e.preventDefault()
+    setText(e.target.value)
+  }
   const handleSubmit = (e) => {
     e.preventDefault()
-    getResponses(selectedListing, selectedVersion)
+    addContext(selectedListing, text)
   }
   const handleSelectListing = (e) => {
     e.preventDefault()
     setSelectedListing(e.target.value)
   }
 
-  const handleSelectVersion = (e) => {
-    e.preventDefault()
-    setSelectedVersion(e.target.value)
-  }
-
   const [currentPage, setCurrentPage] = useState(0)
   const [slideDirection, setSlideDirection] = useState('left')
-  const cardsPerPage = 4
+  const cardsPerPage = 5
   const containerWidth = cardsPerPage * 250
 
   const handleNextPage = () => {
@@ -82,11 +95,16 @@ const AddNewListing = () => {
   return (
     <Wrapper>
       <form className='form' onSubmit={handleSubmit}>
-        <h4>Responses</h4>
+        <h4>Add Document</h4>
+        <FormRow
+          name='Enter Documents:'
+          value={text}
+          handleChange={handleTextChange}
+        />
         <div className='form-center'>
           {/* search position */}
           <FormRowSelect
-            name='Prompt'
+            name='Document:'
             list={[
               'Retirement',
               'Young Adults',
@@ -98,17 +116,12 @@ const AddNewListing = () => {
             value={selectedListing}
             handleChange={handleSelectListing}
           />
-          <FormRowSelect
-            name='prompt version:'
-            list={['1.0', '1.1', '2.0', '2.1']}
-            value={selectedVersion}
-            handleChange={handleSelectVersion}
-          />
           <button className='btn btn-block' type='submit'>
             submit
           </button>
         </div>
       </form>
+
       <Box
         sx={{
           display: 'flex',
@@ -133,7 +146,7 @@ const AddNewListing = () => {
           {/* this is the box that holds the cards and the slide animation,
         in this implementation the card is already constructed but in later versions you will see how the
         items you wish to use will be dynamically created with the map method*/}
-          {responses.map((response, index) => (
+          {contexts.map((context, index) => (
             <Box
               key={`card-${index}`}
               sx={{
@@ -151,17 +164,13 @@ const AddNewListing = () => {
                   justifyContent='center'
                   sx={{ width: '100%', height: '100%' }}
                 >
-                  {responses
+                  {contexts
                     .slice(
                       index * cardsPerPage,
                       index * cardsPerPage + cardsPerPage
                     )
-                    .map((response, i) => (
-                      <ResponseCard
-                        key={i}
-                        question={response.question}
-                        response={response.response}
-                      />
+                    .map((context, i) => (
+                      <ContextCard key={i} information={context.information} />
                     ))}
                 </Stack>
               </Slide>
@@ -174,7 +183,7 @@ const AddNewListing = () => {
             margin: 5,
           }}
           disabled={
-            currentPage >= Math.ceil((responses.length || 0) / cardsPerPage) - 1
+            currentPage >= Math.ceil((contexts.length || 0) / cardsPerPage) - 1
           }
         >
           <NavigateNextIcon />
@@ -184,4 +193,4 @@ const AddNewListing = () => {
   )
 }
 
-export default AddNewListing
+export default AddData

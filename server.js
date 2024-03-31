@@ -12,6 +12,10 @@ import connectDB from './db/connect.js'
 
 // routes
 import authRouter from './routes/authRoutes.js'
+import promptRouter from './routes/promptRoutes.js'
+import contexRouter from './routes/contextRoutes.js'
+import openAIRouter from './routes/openAIRoutes.js'
+import responseRouter from './routes/responseRoute.js'
 
 // middleware
 import notFoundMiddleware from './middleware/not-found.js'
@@ -32,6 +36,10 @@ app.get('/api/v1', (req, res) => {
 })
 
 app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/prompt', promptRouter)
+app.use('/api/v1/context', contexRouter)
+app.use('/api/v1/openai', openAIRouter)
+app.use('/api/v1/response', responseRouter)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)

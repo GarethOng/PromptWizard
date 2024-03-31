@@ -25,11 +25,7 @@ import { FormRow } from '../../components'
 const Contractor = (props) => {
   return (
     <Card sx={{ width: '250px', height: '335px' }}>
-      <CardMedia
-        sx={{ height: 140 }}
-        image={props.contractor.image}
-        title={props.contractor.name}
-      />
+      <CardMedia sx={{ height: 140 }} />
       <CardContent>
         <Typography gutterBottom variant='h5' component='div'>
           {props.contractor.name}
